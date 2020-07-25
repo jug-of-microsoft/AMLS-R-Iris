@@ -1,0 +1,5 @@
+{
+    "subscription_id": < Enter-SubscriptionID-Here >,
+    "resource_group": < Enter-ResurceGroup-Here >,
+    "workspace_name": < Enter-WorkspaceName-Here >
+}
