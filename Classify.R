@@ -2,13 +2,15 @@ options(repos="https://ftp.osuosl.org/pub/cran/")
 
 install.packages("caret")
 install.packages("lattice")
-#install.packages("ggplot")
+install.packages("ggplot2")
 install.packages("ellipse")
 install.packages(pkgs="kernlab")
 install.packages("azuremlsdk")
 
 library(caret)
 library(optparse)
+library(lattice)
+library(ggplot2)
 library(azuremlsdk)
 
 # Setup Data Folder
@@ -79,7 +81,15 @@ x <- train_df[,2:5]
 y <- train_df[,6]
 
 # boxplot for each attribute on one image
-png(filename = file.path(output_dir,"Attributes.png"))
+graphic_file <- "Attributes.jpg"
+#png(filename = file.path(output_dir,"Attributes.png"))
+jpeg(filename = file.path(output_dir,graphic_file),
+     width = 480, 
+     height = 480, 
+     units = "px", 
+     pointsize = 12,
+     quality = 75,
+     bg = "white")
 
 par(mfrow=c(1,4))
   for(i in 1:4) {
@@ -89,7 +99,15 @@ par(mfrow=c(1,4))
 dev.off()
 
 # Plot Species
-png(filename = file.path(output_dir,"Species.png"))
+graphic_file <- "Species.jpg"
+#png(filename = file.path(output_dir,graphic_file))
+jpeg(filename = file.path(output_dir,graphic_file),
+     width = 480, 
+     height = 480, 
+     units = "px", 
+     pointsize = 12,
+     quality = 75,
+     bg = "white")
 
 plot(y)
 
@@ -97,7 +115,15 @@ dev.off()
 
 # Multivariate Plots
 #   scatterplot matrix
-png(filename = file.path(output_dir,"Features-ellipse.png"))
+graphic_file <- "Features-ellipse.jpg"
+#png(filename = file.path(output_dir,graphic_file))
+jpeg(filename = file.path(output_dir,graphic_file),
+     width = 480, 
+     height = 480, 
+     units = "px", 
+     pointsize = 12,
+     quality = 75,
+     bg = "white")
 
 featurePlot(x=x, y=y, plot="ellipse")
 
@@ -105,8 +131,15 @@ dev.off()
 
 #   Boxplot per Specie
 #   box and whisker plots for each attribute
-png(filename = file.path(output_dir,"Features-box.jpeg"),
-     bg = "transparent")
+graphic_file <- "Features-box.jpg"
+#png(filename = file.path(output_dir, graphic_file))
+jpeg(filename = file.path(output_dir,graphic_file),
+     width = 480, 
+     height = 480, 
+     units = "px", 
+     pointsize = 12,
+     quality = 75,
+     bg = "white")
 
 featurePlot(x=x, y=y, plot="box")
 
@@ -114,7 +147,15 @@ dev.off()
 
 # Gaussian-like Distribution of each feature per specie
 # density plots for each attribute by class value
-png(filename = file.path(output_dir,"Features-Density.png"))
+graphic_file <- "Features-Density.jpg"
+#png(filename = file.path(output_dir,graphic_file))
+jpeg(filename = file.path(output_dir,graphic_file),
+     width = 480, 
+     height = 480, 
+     units = "px", 
+     pointsize = 12,
+     quality = 75,
+     bg = "white")
 
 scales <- list(x=list(relation="free"), y=list(relation="free"))
 featurePlot(x=x, y=y, plot="density", scales=scales)
@@ -151,7 +192,15 @@ results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, 
 summary(results)
 
 # Visualize performance
-png(filename = file.path(output_dir,"ModelPerformance.png"))
+graphic_file <- "ModelPerformance.jpg"
+#png(filename = file.path(output_dir,graphic_file))
+jpeg(filename = file.path(output_dir,graphic_file),
+     width = 480, 
+     height = 480, 
+     units = "px", 
+     pointsize = 12,
+     quality = 75,
+     bg = "white")
 
 dotplot(results)
 

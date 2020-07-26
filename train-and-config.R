@@ -26,7 +26,7 @@ if (is.null(compute_target)) {
   compute_target <- create_aml_compute(workspace = ws,
                                        cluster_name = training_target_name,
                                        vm_size = vm_size,
-                                       max_nodes = 1)
+                                       max_nodes = 2)
 }
 
 wait_for_provisioning_completion(compute_target)
@@ -60,4 +60,4 @@ download_files_from_run(run, prefix="outputs/")
 classification_model <- readRDS("outputs/model.rds")
 summary(classification_model)
 
-print("Execution complete!")
+print("Training complete!")
