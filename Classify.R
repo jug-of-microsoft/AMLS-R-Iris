@@ -230,5 +230,5 @@ confusionMatrix(predictions, test_df$Species)
 # Log metric
 log_metric_to_run("Accuracy", fit.lda$results$Accuracy)
 
-saveRDS(fit.lda, file = "./outputs/model.rds")
+saveRDS(fit.lda, file = fil.path(output_dir, "model.rds"))
 message("Model saved")
