@@ -1,11 +1,28 @@
-options(repos="https://ftp.osuosl.org/pub/cran/")
+options(repos="https://cran.revolutionanalytics.com/")
 
-install.packages("caret")
-install.packages("lattice")
-install.packages("ggplot2")
-install.packages("ellipse")
-install.packages(pkgs="kernlab")
-install.packages("azuremlsdk")
+library_dependencies <- c(
+    "caret", 
+    "lattice", 
+    "ggplot2", 
+    "ellipse", 
+    "kernlab", 
+    "azuremlsdk"
+)
+
+library_dependencies;
+length(library_dependencies)
+
+for (i in 1:length(library_dependencies)) {
+    dependency <- library_dependencies[i]
+    myInstalledPackages <- library()$results[,1]
+
+
+    if (!(dependency %in% myInstalledPackages)) {
+      paste("Installing: ", dependency)
+      install.packages(dependency)
+    }
+}
+
 
 library(caret)
 library(optparse)

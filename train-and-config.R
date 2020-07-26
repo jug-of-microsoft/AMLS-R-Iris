@@ -1,6 +1,28 @@
+options(repos="https://cran.revolutionanalytics.com/")
+
 # install the latest version from CRAN
 install.packages(pkgs="azuremlsdk", repo="https://ftp.osuosl.org/pub/cran/")
 install.packages(pkgs="optparse", repo="https://ftp.osuosl.org/pub/cran/")
+
+library_dependencies <- c(
+    "optparse", 
+    "azuremlsdk"
+)
+
+library_dependencies;
+length(library_dependencies)
+
+for (i in 1:length(library_dependencies)) {
+    dependency <- library_dependencies[i]
+    myInstalledPackages <- library()$results[,1]
+
+
+    if (!(dependency %in% myInstalledPackages)) {
+      paste("Installing: ", dependency)
+      install.packages(dependency)
+    }
+}
+
 
 azuremlsdk::install_azureml(envname = 'r-reticulate')
 library(azuremlsdk)
@@ -26,7 +48,8 @@ if (is.null(compute_target)) {
   compute_target <- create_aml_compute(workspace = ws,
                                        cluster_name = training_target_name,
                                        vm_size = vm_size,
-                                       max_nodes = 2)
+                                       min_nodes = 1,
+                                       max_nodes = 1)
 }
 
 wait_for_provisioning_completion(compute_target)
