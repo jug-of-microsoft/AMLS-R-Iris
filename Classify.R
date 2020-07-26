@@ -1,8 +1,15 @@
 options(repos="https://ftp.osuosl.org/pub/cran/")
 
-#install.packages("caret")
+install.packages("caret")
+install.packages("lattice")
+#install.packages("ggplot")
+install.packages("ellipse")
+install.packages(pkgs="kernlab")
+install.packages("azuremlsdk")
+
 library(caret)
 library(optparse)
+library(azuremlsdk)
 
 # Setup Data Folder
 options <- list(
@@ -23,10 +30,10 @@ if (!dir.exists(output_dir)){
 #Load the data
 
 # Use only when testing on local machine
-iris_df <- read.csv(file="IrisDataset.csv", header=TRUE, stringsAsFactors=TRUE)
+#iris_df <- read.csv(file="IrisDataset.csv", header=TRUE, stringsAsFactors=TRUE)
 
 # Use only when deploying to AzureML
-#iris_df <- read.csv(file=file.path(opt$data_folder, "IrisDataset.csv"), header=TRUE, stringsAsFactors=TRUE)
+iris_df <- read.csv(file=file.path(opt$data_folder, "IrisDataset.csv"), header=TRUE, stringsAsFactors=TRUE)
 
 paste("Total Data Size: ", length(iris_df$Id))
 
@@ -72,17 +79,7 @@ x <- train_df[,2:5]
 y <- train_df[,6]
 
 # boxplot for each attribute on one image
-jpeg(filename = file.path(output_dir,"Attributes.jpeg"),
-     width = 480, 
-     height = 480, 
-     units = "px",
-      pointsize = 12,
-     quality = 75,
-     bg = "white", 
-     res = NA, 
-     family = "", 
-     restoreConsole = TRUE
-     )
+png(filename = file.path(output_dir,"Attributes.png"))
 
 par(mfrow=c(1,4))
   for(i in 1:4) {
@@ -92,17 +89,7 @@ par(mfrow=c(1,4))
 dev.off()
 
 # Plot Species
-jpeg(filename = file.path(output_dir,"Species.jpeg"),
-     width = 480, 
-     height = 480, 
-     units = "px",
-      pointsize = 12,
-     quality = 75,
-     bg = "white", 
-     res = NA, 
-     family = "", 
-     restoreConsole = TRUE
-     )
+png(filename = file.path(output_dir,"Species.png"))
 
 plot(y)
 
@@ -110,17 +97,7 @@ dev.off()
 
 # Multivariate Plots
 #   scatterplot matrix
-jpeg(filename = file.path(output_dir,"Features-ellipse.jpeg"),
-     width = 480, 
-     height = 480, 
-     units = "px",
-      pointsize = 12,
-     quality = 75,
-     bg = "white", 
-     res = NA, 
-     family = "", 
-     restoreConsole = TRUE
-     )
+png(filename = file.path(output_dir,"Features-ellipse.png"))
 
 featurePlot(x=x, y=y, plot="ellipse")
 
@@ -128,35 +105,16 @@ dev.off()
 
 #   Boxplot per Specie
 #   box and whisker plots for each attribute
-jpeg(filename = file.path(output_dir,"Features-box.jpeg"),
-     width = 480, 
-     height = 480, 
-     units = "px",
-      pointsize = 12,
-     quality = 75,
-     bg = "white", 
-     res = NA, 
-     family = "", 
-     restoreConsole = TRUE
-     )
+png(filename = file.path(output_dir,"Features-box.jpeg"),
+     bg = "transparent")
 
 featurePlot(x=x, y=y, plot="box")
 
 dev.off()
 
-#   Gaussian-like Distribution of each feature per specie
-#   density plots for each attribute by class value
-jpeg(filename = file.path(output_dir,"Features-Density.jpeg"),
-     width = 480, 
-     height = 480, 
-     units = "px",
-      pointsize = 12,
-     quality = 75,
-     bg = "white", 
-     res = NA, 
-     family = "", 
-     restoreConsole = TRUE
-     )
+# Gaussian-like Distribution of each feature per specie
+# density plots for each attribute by class value
+png(filename = file.path(output_dir,"Features-Density.png"))
 
 scales <- list(x=list(relation="free"), y=list(relation="free"))
 featurePlot(x=x, y=y, plot="density", scales=scales)
@@ -193,17 +151,7 @@ results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, 
 summary(results)
 
 # Visualize performance
-jpeg(filename = file.path(output_dir,"ModelPerformance.jpeg"),
-     width = 480, 
-     height = 480, 
-     units = "px",
-      pointsize = 12,
-     quality = 75,
-     bg = "white", 
-     res = NA, 
-     family = "", 
-     restoreConsole = TRUE
-     )
+png(filename = file.path(output_dir,"ModelPerformance.png"))
 
 dotplot(results)
 
@@ -218,4 +166,3 @@ log_metric_to_run("Accuracy", fit.lda$results$Accuracy)
 
 saveRDS(fit.lda, file = "./outputs/model.rds")
 message("Model saved")
-
